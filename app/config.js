@@ -38,3 +38,39 @@ db.knex.schema.hasTable('users').then(function(exists) {
 });
 
 module.exports = db;
+
+
+Tree.prototype.BFSelect = function(filter, depth) {
+  var queue = new Queue();
+  this.depth = depth || 0;
+  var ans = [], current;
+  queue.enqueue(this);
+
+  while (current = queue.dequeue()) {
+    if (filter(current.value, current.depth)) {
+      ans.push(current.value);
+    }
+    for (var i = 0; i < current.children.length; i++) {
+      var node = current.children[i];
+      node.depth = current.depth + 1;
+      queue.enqueue(node); 
+    }
+  }
+  return ans;
+};
+
+
+var asyncMap = function(tasks, callback){
+  var results =[];
+  var runTasks = function(taskIndex) {
+    tasks[taskIndex](function(thing) {
+      results.push(thing);
+      if (tasks[taskIndex + 1]) {
+        runTasks(taskIndex + 1);
+      } else {
+        callback(results);
+      }
+    });
+  }
+  runTasks(0);
+};  
