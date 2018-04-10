@@ -32,10 +32,19 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+      },
+      build: {
+        
+      src: ['public/**/*.js'],
+      dest: 'public/dist/build.js',
+      }
     },
 
     eslint: {
       target: [
+      '**.js'
         // Add list of files to lint here
       ]
     },
